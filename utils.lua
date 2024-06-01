@@ -18,8 +18,7 @@ function log_callback(source, level, message, ...)
 end
 
 --[[
-    Make a new logger with `name` and setup a handler based on the log level `v`
-    TODO: `v` needs to be figured out, for now it's 1 to print debug messages 0 to not print them or any other value to print nothing
+    Make a new logger with `name`
 ]]--
 function setup_log(name)
     local log_module = require("util.logger")
@@ -42,12 +41,29 @@ function read_all_text(file)
     return text
 end
 
+function send_reply_link(room, match, site, instance, event)
+    local msg = string.format("> %s\nPrivate frontend: %s", match, string.gsub(match, site, instance))
+    if config.use_reply_xep then
+        room:send(verse.message()
+            -- Set message text
+            :body(msg)
+            -- Set reply block
+            :tag("reply", {
+                xmlns = 'urn:xmpp:reply:0',
+                to = event.stanza.attr.from,
+                id = event.stanza.attr.id,
+            }))
+    else
+        room:send_message(msg)
+    end
+end
+
 -- Choose instance from available services
 function choose_instance(services)
+    -- TODO: make it try all available services before falling back
     -- Choose a random service
     local service = services[math.random(#services)]
     -- Get list of instances for service
-    local service_instances
     for _, service_instance_list in pairs(config.instances) do
         if service_instance_list.type == service then
             -- Based on config choose instance

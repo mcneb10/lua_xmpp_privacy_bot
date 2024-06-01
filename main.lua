@@ -1,5 +1,5 @@
 -- Get the verse lib
-local verse = require("verse")
+verse = require("verse")
 -- Setup logging and config
 require("utils")
 local log = setup_log(string.format("%s_main", config.name))
@@ -39,12 +39,11 @@ client:hook("ready", function()
                     if body then
                         for site, services in pairs(config.sites) do
                             local instance = choose_instance(services.frontends)
-                            -- TODO: make it reply using XEP-0461
                             for match in string.gmatch(body, string.format("%%s(%s/%%S+)", site)) do
-                                room:send_message(string.format("> %s\nPrivate frontend: %s", match, string.gsub(match, site, instance)))
+                                send_reply_link(room, match, site, instance, event)
                             end
                             for match in string.gmatch(body, string.format("(https?://%s/%%S+)", site)) do
-                                room:send_message(string.format("> %s\nPrivate frontend: %s", match, string.gsub(match, site, instance)))
+                                send_reply_link(room, match, site, instance, event)
                             end
                         end
                     end

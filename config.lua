@@ -1,6 +1,6 @@
 -- Main privacy bot configuration file
 config = {
-    -- Log verbosity
+    -- Log verbosity, 1 will print debug 0 will not. TODO: give more control over log output
     verbosity = 1,
     -- Bot nickname
     name = "Privacy Link Bot",
@@ -15,6 +15,8 @@ config = {
     prefered_website_medium = "clearnet",
     -- Choose random frontend instead of fallback one, will force clearnet
     random_frontend = true,
+    -- Reply using XEP-0461 instead of just quoting
+    use_reply_xep = true,
     -- List of desired frontends to extract from `services.json`
     sites = {
         -- Key is domain pattern
