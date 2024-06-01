@@ -39,7 +39,7 @@ client:hook("ready", function()
                     local body = event.stanza:get_child_text("body")
                     if body then
                         for site, services in pairs(config.sites) do
-                            local instance = choose_instance(services.frontends)
+                            local instance = choose_instance(services)
                             for match in string.gmatch(body, string.format("%%s(%s/%%S+)", site)) do
                                 send_reply_link(room, match, site, instance, event)
                             end

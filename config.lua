@@ -23,6 +23,8 @@ config = {
         ["reddit[.]com"] = {
             -- Specify which frontents should be used
             frontends = { "libreddit", "redlib" }
+            -- This can be used to force and instance on a per site basis, overrides everything else
+            -- force_instance = { "example.com" }
         },
         ["instagram[.]com"] = {
             frontends = { "proxigram" }

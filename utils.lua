@@ -60,12 +60,16 @@ end
 
 -- Choose instance from available services
 function choose_instance(services)
-    -- TODO: make it try all available services before falling back
-    -- Choose a random service
-    local service = services[math.random(#services)]
-    -- Get list of instances for service
+    -- TODO: make it try all available frontends before falling back
+    -- Return instance if overrided in config
+    if services.force_instance then 
+        return services.force_instance
+    end
+    -- Choose a random frontend
+    local frontend = services.frontends[math.random(#services.frontends)]
+    -- Get list of instances for frontend
     for _, service_instance_list in pairs(config.instances) do
-        if service_instance_list.type == service then
+        if service_instance_list.type == frontend then
             -- Based on config choose instance
             if config.random_frontend then
                 -- TODO: cache this?
@@ -99,7 +103,7 @@ function choose_instance(services)
             end
         end
     end
-    return string.format("%s-no-instances-available", service)
+    return string.format("%s-no-instances-available", frontend)
 end
 
 -- Config file
