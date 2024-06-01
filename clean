@@ -1,0 +1,6 @@
+#!/usr/bin/env lua
+
+print("Deleting compiled verse")
+os.remove("verse.lua")
+print("Deleting services.json")
+os.remove("services.json")

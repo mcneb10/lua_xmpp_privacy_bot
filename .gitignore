@@ -1,0 +1,4 @@
+# Delete verse.lua to compile from source
+#verse.lua
+config_private.lua
+services.json

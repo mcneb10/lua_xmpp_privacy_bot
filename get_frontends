@@ -1,0 +1,6 @@
+#!/usr/bin/env lua
+
+local farside_instance_json_url = "https://git.sr.ht/~benbusby/farside/blob/HEAD/services.json"
+
+os.remove("services.json")
+os.execute(string.format("wget \"%s\"", farside_instance_json_url))

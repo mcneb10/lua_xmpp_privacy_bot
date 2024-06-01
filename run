@@ -1,0 +1,51 @@
+#!/usr/bin/env lua
+
+-- TODO: luarocks?
+
+-- Download frontends list
+if not os.execute(string.format("ls services.json 2>/dev/null >/dev/null")) then
+    dofile("get_frontends")
+end
+
+-- Squish commit hash
+local squish_version = "tip"
+-- Squish script url
+local squish_script = string.format("http://code.matthewwild.co.uk/squish/raw-file/%s/squish.lua", squish_version)
+
+-- Verse commit hash
+local verse_version = "98dc1750584d"
+-- Location for various verse files
+local verse_folder_name = string.format("verse-%s", verse_version)
+local verse_archive_filename = string.format("%s.tar.gz", verse_version)
+local verse_dist = string.format("http://code.matthewwild.co.uk/verse/archive/%s", verse_archive_filename)
+
+-- Options for verse `./configure` script
+local verse_config_opts = ""
+-- Options for verse `make`
+local verse_make_opts = ""
+
+-- Check if verse module exists and compile if it doesn't
+if not os.execute(string.format("ls verse.lua 2>/dev/null >/dev/null")) then
+    -- Download source archive
+    os.execute(string.format("wget \"%s\"", verse_dist))
+    -- Extract the source archive
+    os.execute(string.format("tar -xf \"%s\"", verse_archive_filename))
+    -- Delete the source archive
+    os.remove(verse_archive_filename)
+    -- Compile library 
+    os.execute(string.format(
+        [[sh -c "cd \"%s\" && # Go to library dir
+        wget \"%s\" -O ./buildscripts/squish && # Replace squish with stripped down version that actually works
+        ./configure %s &&  # Configure the library
+        make %s # Compile"]],
+        verse_folder_name, squish_script, verse_config_opts, verse_make_opts
+    ))
+    -- Copy file
+    os.execute(string.format("cp \"%s/verse.lua\" .", verse_folder_name))
+    -- Delete folder
+    os.execute(string.format("rm -rf \"%s\"", verse_folder_name))
+end
+
+
+-- Load main module
+require("main")
