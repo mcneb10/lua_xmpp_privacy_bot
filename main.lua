@@ -32,9 +32,10 @@ client:hook("ready", function()
 
         if room then
             -- Run on message events
-            log("info", "Joined room \"%s\"", room.jid)
             room:hook("message", function(event)
-                if event.stanza.attr.type == "groupchat" and not string.find(event.stanza.attr.from, "/" .. config.name) then
+                if event.stanza.attr.type == "groupchat"
+                    and not string.find(event.stanza.attr.from, "/" .. config.name)
+                    and not event.stanza:get_child("delay", "urn:xmpp:delay") then
                     local body = event.stanza:get_child_text("body")
                     if body then
                         for site, services in pairs(config.sites) do
@@ -49,6 +50,7 @@ client:hook("ready", function()
                     end
                 end
             end)
+            log("info", "Joined room \"%s\"", room.jid)
         else
             log("error", "Error joining room \"%s\": %s", room.jid, err)
         end

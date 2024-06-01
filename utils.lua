@@ -46,7 +46,7 @@ function send_reply_link(room, match, site, instance, event)
     if config.use_reply_xep then
         room:send(verse.message()
             -- Set message text
-            :body(msg)
+            :body(msg):up()
             -- Set reply block
             :tag("reply", {
                 xmlns = 'urn:xmpp:reply:0',
